@@ -1,4 +1,4 @@
-package com.example;
+package com.example.calculator;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -7,43 +7,50 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/calculate")
+@WebServlet("/CalculatorServlet")
 public class CalculatorServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
+    public CalculatorServlet() {
+        super();
+    }
 
-        double num1 = Double.parseDouble(request.getParameter("num1"));
-        double num2 = Double.parseDouble(request.getParameter("num2"));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.getWriter().append("Served at: ").append(request.getContextPath());
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String num1 = request.getParameter("num1");
+        String num2 = request.getParameter("num2");
         String operation = request.getParameter("operation");
 
         double result = 0;
+        double number1 = Double.parseDouble(num1);
+        double number2 = Double.parseDouble(num2);
+
         switch (operation) {
             case "add":
-                result = num1 + num2;
+                result = number1 + number2;
                 break;
             case "subtract":
-                result = num1 - num2;
+                result = number1 - number2;
                 break;
             case "multiply":
-                result = num1 * num2;
+                result = number1 * number2;
                 break;
             case "divide":
-                if (num2 != 0) {
-                    result = num1 / num2;
+                if (number2 != 0) {
+                    result = number1 / number2;
                 } else {
-                    response.getWriter().println("<h3>Division by zero is not allowed!</h3>");
+                    response.getWriter().println("Error: Division by zero.");
                     return;
                 }
                 break;
             default:
-                response.getWriter().println("<h3>Invalid operation!</h3>");
+                response.getWriter().println("Error: Invalid operation.");
                 return;
         }
 
-        response.getWriter().println("<h1>Result: " + result + "</h1>");
+        response.getWriter().println("The result is: " + result);
     }
 }
-
