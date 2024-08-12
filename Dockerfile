@@ -5,7 +5,9 @@ FROM tomcat:9.0
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 # Copy the WAR file to the webapps directory
-COPY target/CalculatorApp.war /usr/local/tomcat/webapps/ROOT.war
+#COPY target/CalculatorApp.war /usr/local/tomcat/webapps/ROOT.war
+COPY target/CalculatorApp-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+
 
 # Expose port 8080 (internal Tomcat port)
 EXPOSE 8080
