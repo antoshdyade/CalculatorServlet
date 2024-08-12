@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/CalculatorServlet")
+@WebServlet("/calculate")
 public class CalculatorServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -25,32 +25,35 @@ public class CalculatorServlet extends HttpServlet {
         String operation = request.getParameter("operation");
 
         double result = 0;
-        double number1 = Double.parseDouble(num1);
-        double number2 = Double.parseDouble(num2);
+        try {
+            double number1 = Double.parseDouble(num1);
+            double number2 = Double.parseDouble(num2);
 
-        switch (operation) {
-            case "add":
-                result = number1 + number2;
-                break;
-            case "subtract":
-                result = number1 - number2;
-                break;
-            case "multiply":
-                result = number1 * number2;
-                break;
-            case "divide":
-                if (number2 != 0) {
-                    result = number1 / number2;
-                } else {
-                    response.getWriter().println("Error: Division by zero.");
+            switch (operation) {
+                case "add":
+                    result = number1 + number2;
+                    break;
+                case "subtract":
+                    result = number1 - number2;
+                    break;
+                case "multiply":
+                    result = number1 * number2;
+                    break;
+                case "divide":
+                    if (number2 != 0) {
+                        result = number1 / number2;
+                    } else {
+                        response.getWriter().println("Error: Division by zero.");
+                        return;
+                    }
+                    break;
+                default:
+                    response.getWriter().println("Error: Invalid operation.");
                     return;
-                }
-                break;
-            default:
-                response.getWriter().println("Error: Invalid operation.");
-                return;
+            }
+            response.getWriter().println("The result is: " + result);
+        } catch (NumberFormatException e) {
+            response.getWriter().println("Error: Invalid number format.");
         }
-
-        response.getWriter().println("The result is: " + result);
     }
 }
