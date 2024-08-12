@@ -6,7 +6,7 @@ pipeline {
         DOCKER_IMAGE = 'calculator-app:latest'
         CONTAINER_NAME = 'calculator-container'
         TOMCAT_INTERNAL_PORT = '8080'
-        EXTERNAL_PORT = '8081' // The port exposed on the host machine
+        EXTERNAL_PORT = '8082' // The port exposed on the host machine
     }
 
     stages {
