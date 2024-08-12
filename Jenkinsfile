@@ -2,47 +2,53 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "calculator-app:latest"
+        REPO_URL = 'https://github.com/antoshdyade/JenkinMavenCalculator.git' 
+        DOCKER_IMAGE = 'calculator-app:latest'
+        CONTAINER_NAME = 'calculator-container'
+        TOMCAT_INTERNAL_PORT = '8080'
+        EXTERNAL_PORT = '8081' // The port exposed on the host machine
     }
 
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                // Checkout the code from GitHub repository
-                checkout scm
+                git branch: 'main', url: "${REPO_URL}"
             }
         }
-        stage('Build') {
+
+        stage('Build with Maven') {
             steps {
-                // Compile the code
-                sh 'mvn clean compile'
+                sh 'mvn clean package'
             }
         }
-        stage('Test') {
+
+        stage('Run Unit Tests') {
             steps {
-                // Run unit tests
                 sh 'mvn test'
             }
         }
-        stage('Package') {
-            steps {
-                // Package the application as a WAR file
-                sh 'mvn package'
-            }
-        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    def app = docker.build(DOCKER_IMAGE, '.')
+                    docker.build("${DOCKER_IMAGE}")
                 }
             }
         }
+
         stage('Deploy to Docker') {
             steps {
                 script {
-                    docker.image(DOCKER_IMAGE).inside {
-                        sh 'docker run -d -p 8080:8080 --name calculator-app ' + DOCKER_IMAGE
-                    }
+                    // Stop and remove any existing container
+                    sh 'docker stop ${CONTAINER_NAME} || true'
+                    sh 'docker rm ${CONTAINER_NAME} || true'
+                    
+                    // Run the new container
+                    sh '''
+                    docker run -d --name ${CONTAINER_NAME} \
+                    -p ${EXTERNAL_PORT}:${TOMCAT_INTERNAL_PORT} \
+                    ${DOCKER_IMAGE}
+                    '''
                 }
             }
         }
@@ -50,14 +56,7 @@ pipeline {
 
     post {
         always {
-            // Publish JUnit test results
-            junit '**/target/surefire-reports/*.xml'
-        }
-        success {
-            echo 'Build, Test, and Deployment Successful!'
-        }
-        failure {
-            echo 'Build, Test, or Deployment Failed.'
+            echo 'Pipeline completed.'
         }
     }
 }

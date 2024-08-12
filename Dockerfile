@@ -1,21 +1,15 @@
-# Use OpenJDK 21 as the base image
-FROM openjdk:21-jdk-slim
+# Use the official Tomcat image as a base
+FROM tomcat:9.0
 
-# Set environment variables for Tomcat
-ENV CATALINA_HOME /usr/local/tomcat
-ENV PATH $CATALINA_HOME/bin:$PATH
+# Remove the default web apps (optional)
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Install necessary packages and download Tomcat
-RUN apt-get update && \
-    apt-get install -y wget && \
-    wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.93/bin/apache-tomcat-9.0.93.tar.gz && \
-    tar xzvf apache-tomcat-9.0.93.tar.gz && \
-    mv apache-tomcat-9.0.93 /usr/local/tomcat && \
-    rm apache-tomcat-9.0.93.tar.gz
+# Copy the WAR file to the webapps directory
+COPY target/CalculatorApp.war /usr/local/tomcat/webapps/ROOT.war
 
-# Expose the default Tomcat port
+# Expose port 8080 (internal Tomcat port)
 EXPOSE 8080
 
-# Set the default command to run Tomcat
+# Start Tomcat
 CMD ["catalina.sh", "run"]
 
