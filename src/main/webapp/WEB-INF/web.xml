@@ -13,7 +13,7 @@
     <!-- Map the servlet to a URL pattern -->
     <servlet-mapping>
         <servlet-name>CalculatorServlet</servlet-name>
-        <url-pattern>/CalculatorServlet</url-pattern>
+        <url-pattern>/calculate</url-pattern>
     </servlet-mapping>
 
     <!-- Configure the welcome file -->
