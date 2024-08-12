@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        REPO_URL = 'https://github.com/antoshdyade/JenkinMavenCalculator.git' 
+        REPO_URL = 'https://github.com/antoshdyade/CalculatorServlet.git' 
         DOCKER_IMAGE = 'calculator-app:latest'
         CONTAINER_NAME = 'calculator-container'
         TOMCAT_INTERNAL_PORT = '8080'
