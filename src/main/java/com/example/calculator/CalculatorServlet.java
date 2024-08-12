@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/CalculateServlet")
+@WebServlet("/calculate")
 public class CalculatorServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -16,7 +16,7 @@ public class CalculatorServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().append("Served at: ").append(request.getContextPath());
+        response.getWriter().append("Use POST method to submit calculations.");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,7 +53,7 @@ public class CalculatorServlet extends HttpServlet {
             }
             response.getWriter().println("The result is: " + result);
         } catch (NumberFormatException e) {
-            response.getWriter().println("Error: Invalid number format.");
+            response.getWriter().println("Error: Invalid input. Please enter valid numbers.");
         }
     }
 }
